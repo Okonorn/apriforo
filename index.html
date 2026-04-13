@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexus Forum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Fondo animado -->
+<div class="bg-canvas">
+  <canvas id="bgCanvas"></canvas>
+  <div class="bg-overlay"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- Modal Login / Register -->
+<div class="modal-backdrop" id="authModal">
+  <div class="modal-box">
+    <div class="modal-logo">N<span>X</span></div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-tab="login">Entrar</button>
+      <button class="auth-tab" data-tab="register">Registro</button>
+    </div>
+
+    <div id="loginForm" class="auth-form">
+      <div class="field">
+        <label>Correo</label>
+        <input type="email" id="loginEmail" placeholder="tu@correo.com">
+      </div>
+      <div class="field">
+        <label>Contraseña</label>
+        <input type="password" id="loginPass" placeholder="••••••••">
+      </div>
+      <div class="auth-error" id="loginError"></div>
+      <button class="btn-primary" id="btnLogin">Iniciar sesión</button>
+    </div>
+
+    <div id="registerForm" class="auth-form hidden">
+      <div class="field">
+        <label>Nombre de usuario</label>
+        <input type="text" id="regName" placeholder="nexus_user">
+      </div>
+      <div class="field">
+        <label>Correo</label>
+        <input type="email" id="regEmail" placeholder="tu@correo.com">
+      </div>
+      <div class="field">
+        <label>Contraseña</label>
+        <input type="password" id="regPass" placeholder="••••••••">
+      </div>
+      <div class="auth-error" id="regError"></div>
+      <button class="btn-primary" id="btnRegister">Crear cuenta</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nuevo Hilo -->
+<div class="modal-backdrop hidden" id="newThreadModal">
+  <div class="modal-box modal-thread">
+    <div class="modal-header">
+      <h2>Nuevo hilo</h2>
+      <button class="btn-icon" id="closeThreadModal">✕</button>
+    </div>
+    <div class="field">
+      <label>Categoría</label>
+      <select id="threadCategory">
+        <option value="offtopic">💬 Off-Topic</option>
+        <option value="videojuegos">🎮 Videojuegos</option>
+        <option value="musica">🎵 Música</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Título</label>
+      <input type="text" id="threadTitle" placeholder="¿De qué trata tu hilo?">
+    </div>
+    <div class="field">
+      <label>Mensaje inicial</label>
+      <textarea id="threadContent" rows="5" placeholder="Escribe aquí..."></textarea>
+    </div>
+    <div class="auth-error" id="threadError"></div>
+    <button class="btn-primary" id="btnCreateThread">Publicar hilo</button>
+  </div>
+</div>
+
+<!-- Modal Ver Hilo -->
+<div class="modal-backdrop hidden" id="viewThreadModal">
+  <div class="modal-box modal-view">
+    <div class="modal-header">
+      <div>
+        <div class="thread-modal-cat" id="viewCatBadge"></div>
+        <h2 id="viewThreadTitle">Título del hilo</h2>
+      </div>
+      <button class="btn-icon" id="closeViewModal">✕</button>
+    </div>
+    <div id="viewThreadPosts" class="posts-list"></div>
+    <div class="reply-box" id="replyBox">
+      <textarea id="replyContent" rows="3" placeholder="Escribe tu respuesta..."></textarea>
+      <button class="btn-primary btn-sm" id="btnReply">Responder</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="nav-logo">N<span>X</span></div>
+    <div class="nav-search">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M10 10l2.5 2.5"/></svg>
+      <input type="text" id="searchInput" placeholder="Buscar hilos...">
+    </div>
+    <div class="nav-right">
+      <div class="user-info hidden" id="userInfo">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <span id="userName">Usuario</span>
+      </div>
+      <button class="btn-ghost" id="btnOpenAuth">Entrar</button>
+      <button class="btn-accent hidden" id="btnNewThread">+ Nuevo hilo</button>
+      <button class="btn-ghost btn-sm hidden" id="btnLogout">Salir</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">Comunidad en vivo</div>
+      <h1 class="hero-title">Nexus<br><em>Forum</em></h1>
+      <p class="hero-sub">Conversaciones sin filtro sobre lo que importa</p>
+    </div>
+    <div class="hero-stats" id="heroStats">
+      <div class="stat"><span id="statThreads">—</span><small>hilos</small></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><span id="statPosts">—</span><small>mensajes</small></div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- CATEGORÍAS -->
+    <section class="categories-row">
+      <button class="cat-pill active" data-cat="all">Todo</button>
+      <button class="cat-pill" data-cat="offtopic">💬 Off-Topic</button>
+      <button class="cat-pill" data-cat="videojuegos">🎮 Videojuegos</button>
+      <button class="cat-pill" data-cat="musica">🎵 Música</button>
+    </section>
+
+    <!-- BLOQUES DE CATEGORÍAS -->
+    <div class="categories-grid" id="categoriesGrid">
+
+      <section class="cat-block" data-category="offtopic">
+        <div class="cat-block-header">
+          <div class="cat-block-icon" style="background:rgba(100,100,120,0.25);color:#b0afd0">💬</div>
+          <div>
+            <h2>Off-Topic</h2>
+            <p>Charlas libres sobre cualquier cosa</p>
+          </div>
+          <div class="cat-block-count"><span class="count-num" id="count-offtopic">0</span> hilos</div>
+        </div>
+        <div class="threads-list" id="threads-offtopic">
+          <div class="threads-empty">Cargando...</div>
+        </div>
+      </section>
+
+      <section class="cat-block" data-category="videojuegos">
+        <div class="cat-block-header">
+          <div class="cat-block-icon" style="background:rgba(80,60,160,0.3);color:#a89ff0">🎮</div>
+          <div>
+            <h2>Videojuegos</h2>
+            <p>Novedades, análisis y partidas</p>
+          </div>
+          <div class="cat-block-count"><span class="count-num" id="count-videojuegos">0</span> hilos</div>
+        </div>
+        <div class="threads-list" id="threads-videojuegos">
+          <div class="threads-empty">Cargando...</div>
+        </div>
+      </section>
+
+      <section class="cat-block" data-category="musica">
+        <div class="cat-block-header">
+          <div class="cat-block-icon" style="background:rgba(160,40,100,0.25);color:#e891b8">🎵</div>
+          <div>
+            <h2>Música</h2>
+            <p>Descubrimientos, listas y conciertos</p>
+          </div>
+          <div class="cat-block-count"><span class="count-num" id="count-musica">0</span> hilos</div>
+        </div>
+        <div class="threads-list" id="threads-musica">
+          <div class="threads-empty">Cargando...</div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <span>Nexus Forum — Hecho con Firebase</span>
+    <span>⚡ Tiempo real</span>
+  </footer>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
