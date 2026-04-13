@@ -20,7 +20,9 @@
   <div class="orb orb-3"></div>
 </div>
 
-<!-- Modal Login / Register -->
+<!-- ══════════════════════════════════════════
+     MODAL AUTH
+══════════════════════════════════════════ -->
 <div class="modal-backdrop" id="authModal">
   <div class="modal-box">
     <div class="modal-logo">N<span>X</span></div>
@@ -28,40 +30,25 @@
       <button class="auth-tab active" data-tab="login">Entrar</button>
       <button class="auth-tab" data-tab="register">Registro</button>
     </div>
-
     <div id="loginForm" class="auth-form">
-      <div class="field">
-        <label>Correo</label>
-        <input type="email" id="loginEmail" placeholder="tu@correo.com">
-      </div>
-      <div class="field">
-        <label>Contraseña</label>
-        <input type="password" id="loginPass" placeholder="••••••••">
-      </div>
+      <div class="field"><label>Correo</label><input type="email" id="loginEmail" placeholder="tu@correo.com"></div>
+      <div class="field"><label>Contraseña</label><input type="password" id="loginPass" placeholder="••••••••"></div>
       <div class="auth-error" id="loginError"></div>
       <button class="btn-primary" id="btnLogin">Iniciar sesión</button>
     </div>
-
     <div id="registerForm" class="auth-form hidden">
-      <div class="field">
-        <label>Nombre de usuario</label>
-        <input type="text" id="regName" placeholder="nexus_user">
-      </div>
-      <div class="field">
-        <label>Correo</label>
-        <input type="email" id="regEmail" placeholder="tu@correo.com">
-      </div>
-      <div class="field">
-        <label>Contraseña</label>
-        <input type="password" id="regPass" placeholder="••••••••">
-      </div>
+      <div class="field"><label>Nombre de usuario</label><input type="text" id="regName" placeholder="nexus_user"></div>
+      <div class="field"><label>Correo</label><input type="email" id="regEmail" placeholder="tu@correo.com"></div>
+      <div class="field"><label>Contraseña</label><input type="password" id="regPass" placeholder="••••••••"></div>
       <div class="auth-error" id="regError"></div>
       <button class="btn-primary" id="btnRegister">Crear cuenta</button>
     </div>
   </div>
 </div>
 
-<!-- Modal Nuevo Hilo -->
+<!-- ══════════════════════════════════════════
+     MODAL NUEVO HILO
+══════════════════════════════════════════ -->
 <div class="modal-backdrop hidden" id="newThreadModal">
   <div class="modal-box modal-thread">
     <div class="modal-header">
@@ -82,35 +69,135 @@
     </div>
     <div class="field">
       <label>Mensaje inicial</label>
-      <textarea id="threadContent" rows="5" placeholder="Escribe aquí..."></textarea>
+      <!-- Barra de herramientas del editor -->
+      <div class="editor-toolbar" id="threadToolbar">
+        <button class="tb-btn" data-action="bold" title="Negrita"><b>B</b></button>
+        <button class="tb-btn" data-action="italic" title="Cursiva"><i>I</i></button>
+        <button class="tb-btn" data-action="underline" title="Subrayado"><u>U</u></button>
+        <button class="tb-btn" data-action="strike" title="Tachado"><s>S</s></button>
+        <div class="tb-sep"></div>
+        <button class="tb-btn" data-action="quote" title="Cita">❝</button>
+        <button class="tb-btn" data-action="code" title="Código">⌨</button>
+        <button class="tb-btn" data-action="list" title="Lista">≡</button>
+        <div class="tb-sep"></div>
+        <button class="tb-btn" data-action="image" title="Imagen por URL">🖼</button>
+        <button class="tb-btn" data-action="youtube" title="Video YouTube">▶</button>
+        <button class="tb-btn" data-action="link" title="Enlace">🔗</button>
+        <div class="tb-sep"></div>
+        <button class="tb-btn tb-emoji" data-action="emoji" title="Emojis">😊</button>
+      </div>
+      <div class="emoji-picker hidden" id="threadEmojiPicker"></div>
+      <textarea id="threadContent" rows="7" placeholder="Escribe aquí... También puedes pegar una URL de YouTube directamente."></textarea>
+      <div class="editor-preview-toggle">
+        <button class="tb-btn" id="threadPreviewBtn">👁 Vista previa</button>
+      </div>
+      <div class="post-preview hidden" id="threadPreview"></div>
     </div>
     <div class="auth-error" id="threadError"></div>
     <button class="btn-primary" id="btnCreateThread">Publicar hilo</button>
   </div>
 </div>
 
-<!-- Modal Ver Hilo -->
+<!-- ══════════════════════════════════════════
+     MODAL VER HILO
+══════════════════════════════════════════ -->
 <div class="modal-backdrop hidden" id="viewThreadModal">
   <div class="modal-box modal-view">
     <div class="modal-header">
       <div>
         <div class="thread-modal-cat" id="viewCatBadge"></div>
-        <h2 id="viewThreadTitle">Título del hilo</h2>
+        <h2 id="viewThreadTitle"></h2>
       </div>
       <button class="btn-icon" id="closeViewModal">✕</button>
     </div>
     <div id="viewThreadPosts" class="posts-list"></div>
-    <div class="reply-box" id="replyBox">
-      <textarea id="replyContent" rows="3" placeholder="Escribe tu respuesta..."></textarea>
-      <button class="btn-primary btn-sm" id="btnReply">Responder</button>
+    <div class="reply-box hidden" id="replyBox">
+      <div class="editor-toolbar" id="replyToolbar">
+        <button class="tb-btn" data-action="bold"><b>B</b></button>
+        <button class="tb-btn" data-action="italic"><i>I</i></button>
+        <button class="tb-btn" data-action="underline"><u>U</u></button>
+        <button class="tb-btn" data-action="strike"><s>S</s></button>
+        <div class="tb-sep"></div>
+        <button class="tb-btn" data-action="quote">❝</button>
+        <button class="tb-btn" data-action="code">⌨</button>
+        <div class="tb-sep"></div>
+        <button class="tb-btn" data-action="image">🖼</button>
+        <button class="tb-btn" data-action="youtube">▶</button>
+        <button class="tb-btn" data-action="link">🔗</button>
+        <div class="tb-sep"></div>
+        <button class="tb-btn tb-emoji" data-action="emoji">😊</button>
+      </div>
+      <div class="emoji-picker hidden" id="replyEmojiPicker"></div>
+      <textarea id="replyContent" rows="4" placeholder="Escribe tu respuesta..."></textarea>
+      <div class="reply-actions">
+        <button class="tb-btn" id="replyPreviewBtn">👁 Vista previa</button>
+        <button class="btn-accent btn-sm" id="btnReply">Responder</button>
+      </div>
+      <div class="post-preview hidden" id="replyPreview"></div>
+    </div>
+    <div class="reply-login-hint hidden" id="replyLoginHint">
+      <span>Inicia sesión para responder</span>
+      <button class="btn-accent btn-sm" id="btnOpenAuthFromThread">Entrar</button>
     </div>
   </div>
 </div>
 
-<!-- APP -->
+<!-- ══════════════════════════════════════════
+     MODAL PERFIL DE USUARIO
+══════════════════════════════════════════ -->
+<div class="modal-backdrop hidden" id="profileModal">
+  <div class="modal-box modal-profile">
+    <div class="modal-header">
+      <h2>Mi perfil</h2>
+      <button class="btn-icon" id="closeProfileModal">✕</button>
+    </div>
+
+    <div class="profile-avatar-section">
+      <div class="profile-avatar-preview" id="profileAvatarPreview"></div>
+      <div class="profile-avatar-options">
+        <p class="field-label">Avatar</p>
+        <div class="avatar-type-tabs">
+          <button class="avatar-tab active" data-avtype="initials">Iniciales</button>
+          <button class="avatar-tab" data-avtype="url">URL de imagen</button>
+          <button class="avatar-tab" data-avtype="preset">Presets</button>
+        </div>
+        <div id="avInitials" class="av-panel">
+          <p style="font-size:12px;color:var(--text-3)">Se usará la primera letra de tu nombre con un color de fondo.</p>
+          <div class="avatar-color-row" id="avatarColorRow"></div>
+        </div>
+        <div id="avUrl" class="av-panel hidden">
+          <div class="field"><label>URL de imagen</label><input type="url" id="avatarUrlInput" placeholder="https://..."></div>
+        </div>
+        <div id="avPreset" class="av-panel hidden">
+          <div class="preset-grid" id="presetGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field"><label>Nombre de usuario</label><input type="text" id="profileName" placeholder="Tu nombre"></div>
+    <div class="field"><label>Bio (se muestra en el perfil)</label><textarea id="profileBio" rows="2" placeholder="Cuéntanos algo..."></textarea></div>
+    <div class="field">
+      <label>Firma (aparece bajo tus mensajes)</label>
+      <div class="editor-toolbar" id="sigToolbar">
+        <button class="tb-btn" data-action="bold"><b>B</b></button>
+        <button class="tb-btn" data-action="italic"><i>I</i></button>
+        <button class="tb-btn" data-action="link">🔗</button>
+        <button class="tb-btn" data-action="image">🖼</button>
+      </div>
+      <textarea id="profileSig" rows="2" placeholder="Tu firma... (acepta [b], [i], [img], [url])"></textarea>
+    </div>
+    <div class="auth-error" id="profileError"></div>
+    <div class="profile-save-row">
+      <button class="btn-primary" id="btnSaveProfile">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     APP
+══════════════════════════════════════════ -->
 <div class="app" id="app">
 
-  <!-- NAV -->
   <nav class="navbar">
     <div class="nav-logo">N<span>X</span></div>
     <div class="nav-search">
@@ -118,34 +205,31 @@
       <input type="text" id="searchInput" placeholder="Buscar hilos...">
     </div>
     <div class="nav-right">
-      <div class="user-info hidden" id="userInfo">
-        <div class="user-avatar" id="userAvatar">?</div>
+      <div class="user-chip hidden" id="userChip">
+        <div class="user-avatar-nav" id="userAvatarNav"></div>
         <span id="userName">Usuario</span>
+        <button class="btn-ghost btn-xs" id="btnProfile">⚙ Perfil</button>
       </div>
       <button class="btn-ghost" id="btnOpenAuth">Entrar</button>
       <button class="btn-accent hidden" id="btnNewThread">+ Nuevo hilo</button>
-      <button class="btn-ghost btn-sm hidden" id="btnLogout">Salir</button>
+      <button class="btn-ghost btn-xs hidden" id="btnLogout">Salir</button>
     </div>
   </nav>
 
-  <!-- HERO -->
   <header class="hero">
     <div class="hero-inner">
       <div class="hero-badge">Comunidad en vivo</div>
       <h1 class="hero-title">Nexus<br><em>Forum</em></h1>
       <p class="hero-sub">Conversaciones sin filtro sobre lo que importa</p>
     </div>
-    <div class="hero-stats" id="heroStats">
+    <div class="hero-stats">
       <div class="stat"><span id="statThreads">—</span><small>hilos</small></div>
       <div class="stat-divider"></div>
       <div class="stat"><span id="statPosts">—</span><small>mensajes</small></div>
     </div>
   </header>
 
-  <!-- MAIN -->
   <main class="main">
-
-    <!-- CATEGORÍAS -->
     <section class="categories-row">
       <button class="cat-pill active" data-cat="all">Todo</button>
       <button class="cat-pill" data-cat="offtopic">💬 Off-Topic</button>
@@ -153,49 +237,33 @@
       <button class="cat-pill" data-cat="musica">🎵 Música</button>
     </section>
 
-    <!-- BLOQUES DE CATEGORÍAS -->
     <div class="categories-grid" id="categoriesGrid">
 
       <section class="cat-block" data-category="offtopic">
         <div class="cat-block-header">
           <div class="cat-block-icon" style="background:rgba(100,100,120,0.25);color:#b0afd0">💬</div>
-          <div>
-            <h2>Off-Topic</h2>
-            <p>Charlas libres sobre cualquier cosa</p>
-          </div>
+          <div><h2>Off-Topic</h2><p>Charlas libres sobre cualquier cosa</p></div>
           <div class="cat-block-count"><span class="count-num" id="count-offtopic">0</span> hilos</div>
         </div>
-        <div class="threads-list" id="threads-offtopic">
-          <div class="threads-empty">Cargando...</div>
-        </div>
+        <div class="threads-list" id="threads-offtopic"><div class="threads-empty">Cargando...</div></div>
       </section>
 
       <section class="cat-block" data-category="videojuegos">
         <div class="cat-block-header">
           <div class="cat-block-icon" style="background:rgba(80,60,160,0.3);color:#a89ff0">🎮</div>
-          <div>
-            <h2>Videojuegos</h2>
-            <p>Novedades, análisis y partidas</p>
-          </div>
+          <div><h2>Videojuegos</h2><p>Novedades, análisis y partidas</p></div>
           <div class="cat-block-count"><span class="count-num" id="count-videojuegos">0</span> hilos</div>
         </div>
-        <div class="threads-list" id="threads-videojuegos">
-          <div class="threads-empty">Cargando...</div>
-        </div>
+        <div class="threads-list" id="threads-videojuegos"><div class="threads-empty">Cargando...</div></div>
       </section>
 
       <section class="cat-block" data-category="musica">
         <div class="cat-block-header">
           <div class="cat-block-icon" style="background:rgba(160,40,100,0.25);color:#e891b8">🎵</div>
-          <div>
-            <h2>Música</h2>
-            <p>Descubrimientos, listas y conciertos</p>
-          </div>
+          <div><h2>Música</h2><p>Descubrimientos, listas y conciertos</p></div>
           <div class="cat-block-count"><span class="count-num" id="count-musica">0</span> hilos</div>
         </div>
-        <div class="threads-list" id="threads-musica">
-          <div class="threads-empty">Cargando...</div>
-        </div>
+        <div class="threads-list" id="threads-musica"><div class="threads-empty">Cargando...</div></div>
       </section>
 
     </div>
