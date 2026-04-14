@@ -255,3 +255,53 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-1
   .thread-row { padding: 12px 14px; }
   .profile-avatar-section { flex-direction: column; align-items: center; }
 }
+
+/* ─── SHOW MORE BUTTON ─── */
+.cat-show-more { border-top: 0.5px solid var(--border); }
+.btn-show-more { width: 100%; background: transparent; border: none; color: var(--text-3); font-family: var(--font-body); font-size: 13px; padding: 12px; cursor: pointer; transition: all 0.2s; }
+.btn-show-more:hover { background: var(--surface-hover); color: var(--accent); }
+
+/* ─── DANGER BUTTON ─── */
+.btn-danger { background: rgba(255,80,80,0.15); border: 0.5px solid rgba(255,80,80,0.3); border-radius: 8px; color: #ff6060; font-family: var(--font-body); font-size: 12px; padding: 5px 10px; cursor: pointer; transition: all 0.2s; }
+.btn-danger:hover { background: rgba(255,80,80,0.25); }
+
+/* ─── POST ACTIONS ─── */
+.post-actions { display: flex; gap: 6px; margin-top: 8px; justify-content: flex-end; }
+.post-act-btn { background: transparent; border: 0.5px solid var(--border); border-radius: 6px; color: var(--text-3); font-size: 11px; padding: 3px 10px; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+.post-act-btn:hover { background: var(--surface-hover); color: var(--text-1); }
+.post-act-btn.danger { color: #ff6060; border-color: rgba(255,80,80,0.3); }
+.post-act-btn.danger:hover { background: rgba(255,80,80,0.1); }
+
+/* ─── ADMIN BADGE ─── */
+.badge-admin { background: linear-gradient(135deg,#7c6fff,#e060a0); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 99px; font-weight: 600; letter-spacing: 0.04em; }
+.post-author-role { margin-top: 2px; }
+
+/* ─── NICK LINK ─── */
+.nick-link { cursor: pointer; color: var(--text-1); transition: color 0.15s; }
+.nick-link:hover { color: var(--accent); text-decoration: underline; }
+
+/* ─── PUBLIC PROFILE MODAL ─── */
+.modal-public-profile { max-width: 560px; max-height: 88vh; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+.pub-profile-hero { display: flex; gap: 20px; align-items: flex-start; padding: 4px 0; }
+.pub-avatar { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; font-size: 28px; overflow: hidden; border: 2px solid var(--border-strong); flex-shrink: 0; }
+.pub-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.pub-info { flex: 1; min-width: 0; }
+.pub-name { font-family: var(--font-display); font-size: 22px; font-weight: 800; color: var(--text-1); line-height: 1.1; margin-bottom: 6px; }
+.pub-badge-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+.pub-badge { font-size: 11px; padding: 2px 10px; border-radius: 99px; font-weight: 500; }
+.pub-joined { font-size: 12px; color: var(--text-3); }
+.pub-bio { font-size: 14px; color: var(--text-2); line-height: 1.5; margin-top: 4px; }
+.pub-stats-row { display: flex; gap: 24px; padding: 14px 0; border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); }
+.pub-stat { text-align: center; }
+.pub-stat span { display: block; font-family: var(--font-display); font-size: 24px; font-weight: 800; color: var(--text-1); }
+.pub-stat small { font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; }
+.pub-section-title { font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.pub-threads-list { display: flex; flex-direction: column; gap: 6px; }
+.pub-thread-row { background: var(--surface); border: 0.5px solid var(--border); border-radius: 10px; padding: 10px 14px; cursor: pointer; transition: background 0.15s; }
+.pub-thread-row:hover { background: var(--surface-hover); }
+.pub-thread-row .t-title { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pub-thread-row .t-meta { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+.pub-sig-wrap { }
+.pub-signature { background: var(--surface); border: 0.5px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--text-3); font-style: italic; word-break: break-word; }
+.pub-signature img { max-height: 60px; border-radius: 4px; }
+.pub-empty { font-size: 13px; color: var(--text-3); padding: 8px 0; }
