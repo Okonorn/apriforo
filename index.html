@@ -3,75 +3,101 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Tetris Online</title>
+<title>Pokétris Online</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<!-- Pantalla de Login -->
+<div class="bg-orbs"><span></span><span></span><span></span></div>
+
+<!-- Login -->
 <div id="login" class="overlay">
-  <div class="card">
-    <h1>🟦 Tetris Online</h1>
-    <p>Introduce tu nombre y un código de sala. Si la sala no existe, se creará.</p>
-    <input id="username" type="text" placeholder="Tu nombre" maxlength="16" />
-    <input id="roomcode" type="text" placeholder="Código de sala (ej: SALA1)" maxlength="12" />
-    <button id="joinBtn">Entrar</button>
+  <div class="card glass">
+    <h1 class="title">PO<span>KÉ</span>TRIS <small>ONLINE</small></h1>
+    <p class="subtitle">Elige tu Pokémon, entra a una sala y reta a tus amigos.</p>
+
+    <label>Tu nombre</label>
+    <input id="username" type="text" placeholder="Ash" maxlength="16" />
+
+    <label>Código de sala</label>
+    <input id="roomcode" type="text" placeholder="SALA1" maxlength="12" />
+
+    <label>Avatar</label>
+    <div id="avatarGrid" class="avatar-grid"></div>
+
+    <button id="joinBtn" class="btn-primary">▶ ENTRAR</button>
   </div>
 </div>
 
 <!-- Juego -->
 <div id="game" class="hidden">
-  <header>
-    <h2>Sala: <span id="roomName"></span></h2>
-    <div>Jugador: <span id="playerName"></span></div>
-    <button id="leaveBtn">Salir</button>
+  <header class="topbar glass">
+    <div class="left">
+      <img id="myAvatar" alt="" />
+      <div>
+        <div class="muted">Sala</div>
+        <h2 id="roomName"></h2>
+      </div>
+      <div>
+        <div class="muted">Jugador</div>
+        <h2 id="playerName"></h2>
+      </div>
+    </div>
+    <div class="right">
+      <button id="muteBtn" class="btn-ghost" title="Silenciar">🔊</button>
+      <button id="leaveBtn" class="btn-ghost">Salir</button>
+    </div>
   </header>
 
-  <main>
-    <!-- Tablero principal -->
-    <section class="board-area">
+  <main class="layout">
+    <section class="board-area glass">
       <div class="board-wrapper">
-        <canvas id="board" width="240" height="480"></canvas>
-        <div class="side">
-          <div>
+        <div class="board-stack">
+          <canvas id="board" width="240" height="480"></canvas>
+          <div id="gameOver" class="gameover hidden">
+            <div>GAME OVER</div>
+            <small>Pulsa <kbd>R</kbd> para reiniciar</small>
+          </div>
+        </div>
+        <aside class="side">
+          <div class="panel">
             <h3>Siguiente</h3>
             <canvas id="next" width="96" height="96"></canvas>
           </div>
-          <div>
+          <div class="panel stat">
             <h3>Puntos</h3>
-            <div id="score">0</div>
+            <div id="score" class="big">0</div>
           </div>
-          <div>
+          <div class="panel stat">
             <h3>Líneas</h3>
-            <div id="lines">0</div>
+            <div id="lines" class="big">0</div>
           </div>
-          <div class="controls-help">
-            <small>← → mover · ↑ rotar · ↓ bajar · espacio caída</small>
+          <div class="panel hint">
+            <small>← → mover<br>↑ rotar<br>↓ bajar<br>espacio caída</small>
           </div>
-        </div>
+        </aside>
       </div>
-      <div id="gameOver" class="hidden">GAME OVER — pulsa R para reiniciar</div>
     </section>
 
-    <!-- Otros jugadores -->
-    <section class="opponents">
+    <section class="opponents glass">
       <h3>Otros jugadores</h3>
       <div id="opponentsList"></div>
     </section>
 
-    <!-- Chat -->
-    <section class="chat">
+    <section class="chat glass">
       <h3>Chat</h3>
       <div id="messages"></div>
       <form id="chatForm">
-        <input id="chatInput" type="text" placeholder="Escribe..." maxlength="200" autocomplete="off" />
-        <button type="submit">Enviar</button>
+        <input id="chatInput" type="text" placeholder="Escribe un mensaje..." maxlength="200" autocomplete="off" />
+        <button type="submit" class="btn-primary small">Enviar</button>
       </form>
     </section>
   </main>
 </div>
 
-<!-- Firebase + lógica -->
 <script type="module" src="app.js"></script>
 </body>
 </html>
