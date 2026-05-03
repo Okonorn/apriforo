@@ -1,293 +1,77 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>APRIFORO</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tetris Online</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<div class="bg-canvas">
-  <canvas id="bgCanvas"></canvas>
-  <div class="bg-overlay"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-</div>
-
-<!-- ── AUTH ────────────────────────────────────── -->
-<div class="modal-backdrop" id="authModal">
-  <div class="modal-box">
-    <div class="modal-logo">AP<span>RI</span></div>
-    <div class="auth-tabs">
-      <button class="auth-tab active" data-tab="login">Entrar</button>
-      <button class="auth-tab" data-tab="register">Registro</button>
-    </div>
-    <div id="loginForm" class="auth-form">
-      <div class="field"><label>Correo</label><input type="email" id="loginEmail" placeholder="tu@correo.com"></div>
-      <div class="field"><label>Contraseña</label><input type="password" id="loginPass" placeholder="••••••••"></div>
-      <div class="auth-error" id="loginError"></div>
-      <button class="btn-primary" id="btnLogin">Iniciar sesión</button>
-    </div>
-    <div id="registerForm" class="auth-form hidden">
-      <div class="field"><label>Nombre de usuario</label><input type="text" id="regName" placeholder="nexus_user"></div>
-      <div class="field"><label>Correo</label><input type="email" id="regEmail" placeholder="tu@correo.com"></div>
-      <div class="field"><label>Contraseña</label><input type="password" id="regPass" placeholder="••••••••"></div>
-      <div class="auth-error" id="regError"></div>
-      <button class="btn-primary" id="btnRegister">Crear cuenta</button>
-    </div>
+<!-- Pantalla de Login -->
+<div id="login" class="overlay">
+  <div class="card">
+    <h1>🟦 Tetris Online</h1>
+    <p>Introduce tu nombre y un código de sala. Si la sala no existe, se creará.</p>
+    <input id="username" type="text" placeholder="Tu nombre" maxlength="16" />
+    <input id="roomcode" type="text" placeholder="Código de sala (ej: SALA1)" maxlength="12" />
+    <button id="joinBtn">Entrar</button>
   </div>
 </div>
 
-<!-- ── NUEVO HILO ──────────────────────────────── -->
-<div class="modal-backdrop hidden" id="newThreadModal">
-  <div class="modal-box modal-thread">
-    <div class="modal-header">
-      <h2 id="newThreadModalTitle">Nuevo hilo</h2>
-      <button class="btn-icon" id="closeThreadModal">✕</button>
-    </div>
-    <div class="field">
-      <label>Categoría</label>
-      <select id="threadCategory">
-        <option value="offtopic">💬 Off-Topic</option>
-        <option value="videojuegos">🎮 Videojuegos</option>
-        <option value="musica">🎵 Música</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>Título</label>
-      <input type="text" id="threadTitle" placeholder="¿De qué trata tu hilo?">
-    </div>
-    <div class="field">
-      <label>Mensaje inicial</label>
-      <div class="editor-toolbar" id="threadToolbar">
-        <button class="tb-btn" data-action="bold"><b>B</b></button>
-        <button class="tb-btn" data-action="italic"><i>I</i></button>
-        <button class="tb-btn" data-action="underline"><u>U</u></button>
-        <button class="tb-btn" data-action="strike"><s>S</s></button>
-        <div class="tb-sep"></div>
-        <button class="tb-btn" data-action="quote">❝</button>
-        <button class="tb-btn" data-action="code">⌨</button>
-        <button class="tb-btn" data-action="list">≡</button>
-        <div class="tb-sep"></div>
-        <button class="tb-btn" data-action="image">🖼</button>
-        <button class="tb-btn" data-action="youtube">▶</button>
-        <button class="tb-btn" data-action="link">🔗</button>
-        <div class="tb-sep"></div>
-        <button class="tb-btn" data-action="emoji">😊</button>
-      </div>
-      <div class="emoji-picker hidden" id="threadEmojiPicker"></div>
-      <textarea id="threadContent" rows="7" placeholder="Escribe aquí..."></textarea>
-      <div class="editor-preview-toggle"><button class="tb-btn" id="threadPreviewBtn">👁 Vista previa</button></div>
-      <div class="post-preview hidden" id="threadPreview"></div>
-    </div>
-    <div class="auth-error" id="threadError"></div>
-    <button class="btn-primary" id="btnCreateThread">Publicar hilo</button>
-  </div>
-</div>
-
-<!-- ── VER HILO ────────────────────────────────── -->
-<div class="modal-backdrop hidden" id="viewThreadModal">
-  <div class="modal-box modal-view">
-    <div class="modal-header">
-      <div style="flex:1;min-width:0">
-        <div class="thread-modal-cat" id="viewCatBadge"></div>
-        <h2 id="viewThreadTitle"></h2>
-      </div>
-      <div style="display:flex;gap:6px;flex-shrink:0">
-        <button class="btn-ghost btn-xs hidden" id="btnEditThread">✏ Editar</button>
-        <button class="btn-danger btn-xs hidden" id="btnDeleteThread">🗑 Eliminar</button>
-        <button class="btn-icon" id="closeViewModal">✕</button>
-      </div>
-    </div>
-    <div id="viewThreadPosts" class="posts-list"></div>
-    <div class="reply-box hidden" id="replyBox">
-      <div class="editor-toolbar" id="replyToolbar">
-        <button class="tb-btn" data-action="bold"><b>B</b></button>
-        <button class="tb-btn" data-action="italic"><i>I</i></button>
-        <button class="tb-btn" data-action="underline"><u>U</u></button>
-        <button class="tb-btn" data-action="strike"><s>S</s></button>
-        <div class="tb-sep"></div>
-        <button class="tb-btn" data-action="quote">❝</button>
-        <button class="tb-btn" data-action="code">⌨</button>
-        <div class="tb-sep"></div>
-        <button class="tb-btn" data-action="image">🖼</button>
-        <button class="tb-btn" data-action="youtube">▶</button>
-        <button class="tb-btn" data-action="link">🔗</button>
-        <div class="tb-sep"></div>
-        <button class="tb-btn" data-action="emoji">😊</button>
-      </div>
-      <div class="emoji-picker hidden" id="replyEmojiPicker"></div>
-      <textarea id="replyContent" rows="4" placeholder="Escribe tu respuesta..."></textarea>
-      <div class="reply-actions">
-        <button class="tb-btn" id="replyPreviewBtn">👁 Vista previa</button>
-        <button class="btn-accent btn-sm" id="btnReply">Responder</button>
-      </div>
-      <div class="post-preview hidden" id="replyPreview"></div>
-    </div>
-    <div class="reply-login-hint hidden" id="replyLoginHint">
-      <span>Inicia sesión para responder</span>
-      <button class="btn-accent btn-sm" id="btnOpenAuthFromThread">Entrar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ── PERFIL PROPIO ───────────────────────────── -->
-<div class="modal-backdrop hidden" id="profileModal">
-  <div class="modal-box modal-profile">
-    <div class="modal-header">
-      <h2>Mi perfil</h2>
-      <button class="btn-icon" id="closeProfileModal">✕</button>
-    </div>
-    <div class="profile-avatar-section">
-      <div class="profile-avatar-preview" id="profileAvatarPreview"></div>
-      <div class="profile-avatar-options">
-        <p class="field-label">Avatar</p>
-        <div class="avatar-type-tabs">
-          <button class="avatar-tab active" data-avtype="initials">Iniciales</button>
-          <button class="avatar-tab" data-avtype="url">URL</button>
-          <button class="avatar-tab" data-avtype="preset">Emojis</button>
-        </div>
-        <div id="avInitials" class="av-panel"><p style="font-size:12px;color:var(--text-3);margin-bottom:6px">Color de fondo:</p><div class="avatar-color-row" id="avatarColorRow"></div></div>
-        <div id="avUrl" class="av-panel hidden"><div class="field"><label>URL de imagen</label><input type="url" id="avatarUrlInput" placeholder="https://..."></div></div>
-        <div id="avPreset" class="av-panel hidden"><div class="preset-grid" id="presetGrid"></div></div>
-      </div>
-    </div>
-    <div class="field"><label>Nombre de usuario</label><input type="text" id="profileName" placeholder="Tu nombre"></div>
-    <div class="field"><label>Bio</label><textarea id="profileBio" rows="2" placeholder="Cuéntanos algo..."></textarea></div>
-    <div class="field">
-      <label>Firma</label>
-      <div class="editor-toolbar" id="sigToolbar">
-        <button class="tb-btn" data-action="bold"><b>B</b></button>
-        <button class="tb-btn" data-action="italic"><i>I</i></button>
-        <button class="tb-btn" data-action="link">🔗</button>
-        <button class="tb-btn" data-action="image">🖼</button>
-      </div>
-      <textarea id="profileSig" rows="2" placeholder="Tu firma..."></textarea>
-    </div>
-    <div class="auth-error" id="profileError"></div>
-    <button class="btn-primary" id="btnSaveProfile">Guardar cambios</button>
-  </div>
-</div>
-
-<!-- ── PÁGINA DE PERFIL PÚBLICO ────────────────── -->
-<div class="modal-backdrop hidden" id="publicProfileModal">
-  <div class="modal-box modal-public-profile">
-    <div class="modal-header">
-      <h2>Perfil de usuario</h2>
-      <button class="btn-icon" id="closePublicProfile">✕</button>
-    </div>
-    <div class="pub-profile-hero">
-      <div class="pub-avatar" id="pubAvatar"></div>
-      <div class="pub-info">
-        <div class="pub-name" id="pubName"></div>
-        <div class="pub-badge-row">
-          <span class="pub-badge" id="pubRoleBadge"></span>
-          <span class="pub-joined" id="pubJoined"></span>
-        </div>
-        <div class="pub-bio" id="pubBio"></div>
-      </div>
-    </div>
-    <div class="pub-stats-row">
-      <div class="pub-stat"><span id="pubThreadCount">0</span><small>hilos</small></div>
-      <div class="pub-stat"><span id="pubPostCount">0</span><small>mensajes</small></div>
-    </div>
-    <div class="pub-section-title">Últimos hilos</div>
-    <div id="pubThreadsList" class="pub-threads-list"></div>
-    <div class="pub-sig-wrap hidden" id="pubSigWrap">
-      <div class="pub-section-title">Firma</div>
-      <div class="pub-signature" id="pubSignature"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ── APP ─────────────────────────────────────── -->
-<div class="app" id="app">
-  <nav class="navbar">
-    <div class="nav-logo">AP<span>RI</span></div>
-    <div class="nav-search">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M10 10l2.5 2.5"/></svg>
-      <input type="text" id="searchInput" placeholder="Buscar hilos...">
-    </div>
-    <div class="nav-right">
-      <div class="user-chip hidden" id="userChip">
-        <div class="user-avatar-nav" id="userAvatarNav"></div>
-        <span id="userName">Usuario</span>
-        <button class="btn-ghost btn-xs" id="btnProfile">⚙ Perfil</button>
-      </div>
-      <button class="btn-ghost" id="btnOpenAuth">Entrar</button>
-      <button class="btn-accent hidden" id="btnNewThread">+ Nuevo hilo</button>
-      <button class="btn-ghost btn-xs hidden" id="btnLogout">Salir</button>
-    </div>
-  </nav>
-
-  <header class="hero">
-    <div class="hero-inner">
-      <div class="hero-badge">Comunidad en vivo</div>
-      <h1 class="hero-title">Apri<br><em>Foro</em></h1>
-      <p class="hero-sub">Shitpost sin frenos gente</p>
-    </div>
-    <div class="hero-stats">
-      <div class="stat"><span id="statThreads">—</span><small>hilos</small></div>
-      <div class="stat-divider"></div>
-      <div class="stat"><span id="statPosts">—</span><small>mensajes</small></div>
-    </div>
+<!-- Juego -->
+<div id="game" class="hidden">
+  <header>
+    <h2>Sala: <span id="roomName"></span></h2>
+    <div>Jugador: <span id="playerName"></span></div>
+    <button id="leaveBtn">Salir</button>
   </header>
 
-  <main class="main">
-    <section class="categories-row">
-      <button class="cat-pill active" data-cat="all">Todo</button>
-      <button class="cat-pill" data-cat="offtopic">💬 Off-Topic</button>
-      <button class="cat-pill" data-cat="videojuegos">🎮 Videojuegos</button>
-      <button class="cat-pill" data-cat="musica">🎵 Música</button>
+  <main>
+    <!-- Tablero principal -->
+    <section class="board-area">
+      <div class="board-wrapper">
+        <canvas id="board" width="240" height="480"></canvas>
+        <div class="side">
+          <div>
+            <h3>Siguiente</h3>
+            <canvas id="next" width="96" height="96"></canvas>
+          </div>
+          <div>
+            <h3>Puntos</h3>
+            <div id="score">0</div>
+          </div>
+          <div>
+            <h3>Líneas</h3>
+            <div id="lines">0</div>
+          </div>
+          <div class="controls-help">
+            <small>← → mover · ↑ rotar · ↓ bajar · espacio caída</small>
+          </div>
+        </div>
+      </div>
+      <div id="gameOver" class="hidden">GAME OVER — pulsa R para reiniciar</div>
     </section>
 
-    <div class="categories-grid">
-      <section class="cat-block" data-category="offtopic">
-        <div class="cat-block-header">
-          <div class="cat-block-icon" style="background:rgba(100,100,120,0.25);color:#b0afd0">💬</div>
-          <div><h2>Off-Topic</h2><p>random shi</p></div>
-          <div class="cat-block-count"><span class="count-num" id="count-offtopic">0</span> hilos</div>
-        </div>
-        <div class="threads-list" id="threads-offtopic"><div class="threads-empty">Cargando...</div></div>
-        <div class="cat-show-more hidden" id="more-offtopic"><button class="btn-show-more" data-cat="offtopic">Ver todos los hilos <span id="morecount-offtopic"></span></button></div>
-      </section>
+    <!-- Otros jugadores -->
+    <section class="opponents">
+      <h3>Otros jugadores</h3>
+      <div id="opponentsList"></div>
+    </section>
 
-      <section class="cat-block" data-category="videojuegos">
-        <div class="cat-block-header">
-          <div class="cat-block-icon" style="background:rgba(80,60,160,0.3);color:#a89ff0">🎮</div>
-          <div><h2>Videojuegos</h2><p>Gaming shi</p></div>
-          <div class="cat-block-count"><span class="count-num" id="count-videojuegos">0</span> hilos</div>
-        </div>
-        <div class="threads-list" id="threads-videojuegos"><div class="threads-empty">Cargando...</div></div>
-        <div class="cat-show-more hidden" id="more-videojuegos"><button class="btn-show-more" data-cat="videojuegos">Ver todos los hilos <span id="morecount-videojuegos"></span></button></div>
-      </section>
-
-      <section class="cat-block" data-category="musica">
-        <div class="cat-block-header">
-          <div class="cat-block-icon" style="background:rgba(160,40,100,0.25);color:#e891b8">🎵</div>
-          <div><h2>Música</h2><p>Music shi</p></div>
-          <div class="cat-block-count"><span class="count-num" id="count-musica">0</span> hilos</div>
-        </div>
-        <div class="threads-list" id="threads-musica"><div class="threads-empty">Cargando...</div></div>
-        <div class="cat-show-more hidden" id="more-musica"><button class="btn-show-more" data-cat="musica">Ver todos los hilos <span id="morecount-musica"></span></button></div>
-      </section>
-    </div>
+    <!-- Chat -->
+    <section class="chat">
+      <h3>Chat</h3>
+      <div id="messages"></div>
+      <form id="chatForm">
+        <input id="chatInput" type="text" placeholder="Escribe..." maxlength="200" autocomplete="off" />
+        <button type="submit">Enviar</button>
+      </form>
+    </section>
   </main>
-
-  <footer class="footer">
-    <span>Apri Foro — Moros not allowed</span>
-    <span>⚡ que pasa bro</span>
-  </footer>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<script src="app.js"></script>
+<!-- Firebase + lógica -->
+<script type="module" src="app.js"></script>
 </body>
 </html>
